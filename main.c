@@ -87,7 +87,6 @@ void read_number_system(int* number_system) {
 
     int num = atoi(input);
 
-
     if (num < 2 || num > 16) {
         printf("Es sind nur Zahlen zwischen 2 und 16 erlaubt.\n");
         read_number_system(number_system);
