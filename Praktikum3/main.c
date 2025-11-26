@@ -22,25 +22,31 @@ int main(void) {
 }
 
 int split(char *string, char splitChar, char **parts, int maxParts, int maxLength) {
-    int counter = 0;
+    int partCounter = 0;
 
-    // i = index von string, j = position von einem char in einem part
-    for (int i = 0, j = 0; i < maxLength && counter < maxParts; i++) {
-        if (string[i] == '\0') {
-            parts[counter][j] = '\0';
+    for (int i = 0, j = 0; i < maxLength; i++) {
+        char c = string[i];
+
+        if (c == '\0') {
+            parts[partCounter][j] = '\0';
+            partCounter += 1;
             break;
         }
 
-        if (string[i] == splitChar) {
-            parts[counter][j] = '\0';
-            counter += 1;
+        if (partCounter == maxParts) {
+            break;
+        }
+
+        if (c == splitChar) {
+            parts[partCounter][j] = '\0';
+            partCounter += 1;
             j = 0;
             continue;
         }
 
-        parts[counter][j] = string[i];
+        parts[partCounter][j] = c;
         j++;
     }
 
-    return counter+1;
+    return partCounter;
 }
