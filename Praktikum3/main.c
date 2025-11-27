@@ -25,7 +25,8 @@ int main(void) {
 int split(char *string, char splitChar, char **parts, int maxParts, int maxLength) {
     int partCounter = 0;
 
-    for (int i = 0, j = 0; i < strlen(string)+1; i++) {
+    int strLength = strlen(string)+1;
+    for (int i = 0, j = 0; i < strLength; i++) {
         char c = string[i];
 
         if (c == '\0') {
@@ -45,7 +46,15 @@ int split(char *string, char splitChar, char **parts, int maxParts, int maxLengt
             continue;
         }
 
-        if (j == maxLength) {
+        if (j+1 == maxLength) {
+            parts[partCounter][j] = '\0';
+            partCounter += 1;
+            j = 0;
+
+            // skippe bis zum ende vom string oder bis neuer Part anfängt
+            while (string[i] != '\0' && string[i] != splitChar) {
+                i += 1;
+            }
             continue;
         }
 
