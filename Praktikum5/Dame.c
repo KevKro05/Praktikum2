@@ -1,65 +1,45 @@
 #include <stdio.h>
-#include <string.h>
 
 void ausgabe(int spielfeld[]);
 int bedroht(int spielfeld[], int zeile, int spalte);
-void setze(int spielfeld[], int spalte, int zeile);
+int setze(int spielfeld[], int spalte);
+void findeLoesungen(int spielfeld[]);
 
 int main(void){
     int spielfeld[8];
-    //Arr -1 setzen
-    for (int i = 0; i < 8; i++){
-        spielfeld[i] = -1;
-    }
-
-    setze(spielfeld, 0,0);
-    ausgabe(spielfeld);
+    findeLoesungen(spielfeld);
 }
 
-void setze(int spielfeld[], int spalte,int zeile){
-    if (spalte > 8){
-        return;
+int setze(int spielfeld[], int spalte) {
+    if (spalte == 8) {
+        ausgabe(spielfeld);
+        return 1;
     }
-    for (zeile; zeile < 8; zeile++){
-        if (bedroht(spielfeld, zeile, spalte)) {
-            continue;
-        }else{
-            spielfeld[spalte] = zeile;
-            setze(spielfeld, ++spalte, 0);
+    int count = 0;
+    for (int z = 0; z < 8; z++) {
+        if (!bedroht(spielfeld, z, spalte)) {
+            spielfeld[spalte] = z;
+            count += setze(spielfeld, spalte + 1);
         }
     }
+
+    return count;
 }
 
 int bedroht(int spielfeld[], int zeile, int spalte){
-    //Vertikal
-    if (spielfeld[spalte] > 0){
-       return 1;
-    }
+    for (int i = 0; i < spalte; i++) {
+        int z = spielfeld[i];
 
-    //Horizontal
-    for (int i = 0; i < 8; i++){
-        if (spielfeld[i] == zeile) {
+        // gleiche Zeile
+        if (z == zeile)
             return 1;
-        }
-    }
 
-
-    //Diagonal oben -> unten
-    int zeiletmp = spalte - zeile;
-    for (int spaltetmp = 0 ; zeiletmp < 8; spaltetmp++){
-        if (spielfeld[spaltetmp] == zeiletmp){
+        // gleiche Diagonale
+        if (z == zeile - (spalte - i))
             return 1;
-        }
-        zeiletmp++;
-    }
 
-    //Diagonale unten -> oben
-    zeiletmp = spalte + zeile;
-    for (int spaltetmp = 0; zeiletmp > 0 ; spaltetmp++){
-        if (spielfeld[spaltetmp] == zeiletmp){
+        if (z == zeile + (spalte - i))
             return 1;
-        }
-        zeiletmp--;
     }
     return 0;
 }
@@ -76,5 +56,19 @@ void ausgabe(int spielfeld[]){
         }
         printf("\n");
     }
+    printf("\n\n");
+}
 
+void findeLoesungen(int spielfeld[]) {
+    int c = 0;
+    for (int start = 0; start < 8; start++)
+    {
+        for (int k = 0; k < 8; k++) {
+            spielfeld[k] = -1;
+        }
+        spielfeld[0] = start;
+        c += setze(spielfeld, 1);
+
+    }
+    printf("Gefundene Lösungen: %d", c);
 }
